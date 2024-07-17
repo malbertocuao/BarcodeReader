@@ -3,20 +3,8 @@
 
 #include <QMainWindow>
 #include <QTimer>
-
-#ifdef Q_OS_WIN
-#include <windows.h>
-#endif
-
-#ifdef Q_OS_LINUX
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#endif
-
-#ifdef Q_OS_MAC
-#include <objc/objc-runtime.h>
-#endif
-
+#include <QObject>
+#include <QDebug>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
