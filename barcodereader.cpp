@@ -11,7 +11,7 @@ BarcodeReader::BarcodeReader(QWidget *parent)
     ui->setupUi(this);
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &BarcodeReader::bringToFront);
-    timer->start(5000); // 5000 milisegundos = 5 segundos
+    timer->start(1000); // 5000 milisegundos = 5 segundos
 
     connect(ui->pushClose, &QPushButton::clicked, this, &BarcodeReader::close);
     connect(ui->pushPause, &QPushButton::clicked, this, [=](){
@@ -77,6 +77,9 @@ BarcodeReader::~BarcodeReader()
 
 void BarcodeReader::bringToFront()
 {
+    if (this->isActiveWindow())
+        return;
+
     setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
     show();
     raise();

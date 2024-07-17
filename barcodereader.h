@@ -7,6 +7,7 @@
 #include <QObject>
 #include <QString>
 #include <QFileInfo>
+#include <QDateTime>
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
