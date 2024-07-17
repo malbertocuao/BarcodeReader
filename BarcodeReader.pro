@@ -10,10 +10,13 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    barcodereader.cpp
+    barcodereader.cpp \
+    qaesencryption.cpp
 
 HEADERS += \
-    barcodereader.h
+    barcodereader.h \
+    crypto-basic.h \
+    qaesencryption.h
 
 FORMS += \
     barcodereader.ui
