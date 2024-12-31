@@ -3,12 +3,38 @@
 #include "qaesencryption.h"
 #include "crypto-basic.h"
 
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QSqlRecord>
+#include <QSqlDatabase>
 
 BarcodeReader::BarcodeReader(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::BarcodeReader)
 {
     ui->setupUi(this);
+
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "CONFIG");
+    db.setDatabaseName(qApp->applicationDirPath() + "/dialogs.so");
+    db.setConnectOptions("QSQLITE_ENABLE_SHARED_CACHE");
+
+    db.open();
+
+    QSqlQuery query(db);
+    query.prepare("SELECT * FROM terminal");
+
+    if (!query.exec())
+    {
+        qDebug() << "UPDATE DB" << "No es posible cargar los datos del terminal";
+        qDebug() << "UPDATE DB" << query.lastError().text();
+    }
+    else
+    {
+        query.next();
+        m_zone = query.value("barcodeZone").toString();
+        qDebug() << "m_zone" << m_zone;
+    }
+
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &BarcodeReader::bringToFront);
     timer->start(1000); // 5000 milisegundos = 5 segundos
@@ -41,7 +67,9 @@ BarcodeReader::BarcodeReader(QWidget *parent)
             QStringLiteral("INSERT INTO ASAi_StCommandsRegs "
                            "([StCommandID], [ai_binary], [file_path], [ai_tocken], [date], [hour], [cadence_rec], [ai_zone])"
                            " VALUES (0, 'detection', '%1', '%2', '%3', '%4', 0, %5)")
-                .arg(image, token, date.toString("dd/MM/yyyy"), date.toString("HH:mm:ss"), "1");
+                .arg(image, token, date.toString("dd/MM/yyyy"), date.toString("HH:mm:ss"), m_zone);
+
+        qDebug() << sql;
 
         auto encoded = encodeString(sql);
 

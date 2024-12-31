@@ -19,6 +19,7 @@ QT_END_NAMESPACE
 class BarcodeReader : public QMainWindow
 {
     Q_OBJECT
+    QString m_zone = "1";
 
 public:
     BarcodeReader(QWidget *parent = nullptr);
